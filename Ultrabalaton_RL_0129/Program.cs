@@ -1,5 +1,25 @@
 ﻿string[] input = File.ReadAllLines("ub2017egyeni.txt");
 Verseny[] data = new Verseny[input.Length];
+static Verseny Gyoztes(Verseny[] versenyek, string kategoria)
+{
+    Verseny gyoztes = versenyek[1];
+
+    for (int i = 1; i < versenyek.Length; i++)
+    {
+        if (versenyek[i].identitas == kategoria && versenyek[i].tavszazalek == 100)
+        {
+            int gyoztesIdo = gyoztes.IdoOraInSeconds();
+            int jelenlegiIdo = versenyek[i].IdoOraInSeconds();
+
+            if (jelenlegiIdo < gyoztesIdo)
+            {
+                gyoztes = versenyek[i];
+            }
+        }
+    }
+
+    return gyoztes;
+}
 for (int i = 1; i < input.Length; i++)
 {
     data[i] = new Verseny(input[i]);
@@ -10,7 +30,7 @@ int noi = 0;
 int ferfims = 0;
 int ferfi = 0;
 
-for (int i = 1; i < input.Length; i++) // Start from 1 to skip the header line
+for (int i = 1; i < input.Length; i++) 
 {
     if (data[i].identitas == "Noi")
     {
@@ -19,11 +39,11 @@ for (int i = 1; i < input.Length; i++) // Start from 1 to skip the header line
             noi++;
         }
     }
-    else // Male athlete
+    else 
     {
         if (data[i].tavszazalek == 100)
         {
-            ferfims += data[i].IdoOraInSeconds(); // Use the new IdoOraInSeconds method
+            ferfims += data[i].IdoOraInSeconds();
             ferfi++;
         }
     }
@@ -40,7 +60,19 @@ else
 {
     Console.WriteLine("Nincs elérhető adat a férfi versenyzők átlagos teljesítési idejéről.");
 }
-   
+
+
+Verseny noiGyoztes = Gyoztes(data, "Noi");
+
+
+Verseny ferfiGyoztes = Gyoztes(data, "Ferfi");
+
+
+Console.WriteLine($"Női kategória győztese:\nNév: {noiGyoztes.nev}\nRajtszám: {noiGyoztes.szam}\nIdőeredmény: {noiGyoztes.ido}");
+
+
+Console.WriteLine($"Férfi kategória győztese:\nNév: {ferfiGyoztes.nev}\nRajtszám: {ferfiGyoztes.szam}\nIdőeredmény: {ferfiGyoztes.ido}");
+
 
 struct Verseny
 {
@@ -73,4 +105,5 @@ struct Verseny
 
         return ora * 3600 + perc * 60 + ms;
     }
+
 }
