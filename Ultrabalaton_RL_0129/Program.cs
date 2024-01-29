@@ -5,6 +5,8 @@ string[] lines = File.ReadAllLines("ub2017egyeni.txt");
 List<szerkezet> adat = new List<szerkezet>();
 
 
+Console.WriteLine("versenyzok szama: "+ lines.Length);
+
 struct szerkezet
 {
     public string nev;
