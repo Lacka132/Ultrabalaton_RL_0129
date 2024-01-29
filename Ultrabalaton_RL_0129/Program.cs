@@ -6,19 +6,41 @@ for (int i = 1; i < input.Length; i++)
 }
 Console.WriteLine($"{input.Length} egyéni sportoló indult a versenyen.");
 
-int teljesnoi = 0;
-for (int i = 0; i < input.Length; i++)
+int noi = 0;
+int ferfims = 0;
+int ferfi = 0;
+
+for (int i = 1; i < input.Length; i++) // Start from 1 to skip the header line
 {
     if (data[i].identitas == "Noi")
     {
         if (data[i].tavszazalek == 100)
         {
-            teljesnoi++;
+            noi++;
         }
-
+    }
+    else // Male athlete
+    {
+        if (data[i].tavszazalek == 100)
+        {
+            ferfims += data[i].IdoOraInSeconds(); // Use the new IdoOraInSeconds method
+            ferfi++;
+        }
     }
 }
-Console.WriteLine($"{teljesnoi} női versenyző teljesítette az egész távot.");
+
+Console.WriteLine($"Ennyi női versenyző teljesítette az egész távot: {noi}");
+
+if (ferfi > 0)
+{
+    double averageMaleTimeInHours = ferfims / 3600.0 / ferfi;
+    Console.WriteLine($"Az átlagos teljesítési idő férfi versenyzők esetében: {averageMaleTimeInHours:F2} óra");
+}
+else
+{
+    Console.WriteLine("Nincs elérhető adat a férfi versenyzők átlagos teljesítési idejéről.");
+}
+   
 
 struct Verseny
 {
@@ -42,4 +64,13 @@ struct Verseny
 
     }
 
+    public int IdoOraInSeconds()
+    {
+        string[] timeParts = ido.Split(':');
+        int ora = int.Parse(timeParts[0]);
+        int perc = int.Parse(timeParts[1]);
+        int ms = int.Parse(timeParts[2]);
+
+        return ora * 3600 + perc * 60 + ms;
+    }
 }
